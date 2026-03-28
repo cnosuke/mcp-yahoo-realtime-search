@@ -11,7 +11,6 @@ import (
 	"github.com/knadh/koanf/v2"
 )
 
-// Config - Application configuration
 type Config struct {
 	Log      string `koanf:"log"`
 	LogLevel string `koanf:"log_level"`
@@ -29,7 +28,6 @@ type Config struct {
 	} `koanf:"search"`
 }
 
-// LoadConfig - Load configuration file
 func LoadConfig(path string) (*Config, error) {
 	k := koanf.New(".")
 
@@ -46,10 +44,7 @@ func LoadConfig(path string) (*Config, error) {
 	}
 
 	// 3. Environment variable overrides
-	envOverrides, err := loadEnvOverrides()
-	if err != nil {
-		return nil, err
-	}
+	envOverrides := loadEnvOverrides()
 	if len(envOverrides) > 0 {
 		if err := k.Load(confmap.Provider(envOverrides, "."), nil); err != nil {
 			return nil, err
@@ -74,7 +69,7 @@ func defaultValues() map[string]interface{} {
 	}
 }
 
-func loadEnvOverrides() (map[string]interface{}, error) {
+func loadEnvOverrides() map[string]interface{} {
 	envMapping := map[string]string{
 		"LOG_PATH":             "log",
 		"LOG_LEVEL":            "log_level",
@@ -105,5 +100,5 @@ func loadEnvOverrides() (map[string]interface{}, error) {
 			overrides[koanfKey] = val
 		}
 	}
-	return overrides, nil
+	return overrides
 }

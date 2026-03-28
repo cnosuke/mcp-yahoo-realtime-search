@@ -11,15 +11,16 @@ import (
 	"go.uber.org/zap/zaptest"
 )
 
-func TestRegisterAllTools(t *testing.T) {
+func TestRegisterTools(t *testing.T) {
 	logger := zaptest.NewLogger(t)
 	zap.ReplaceGlobals(logger)
 
 	mcpServer := mcp.NewServer(&mcp.Implementation{Name: "test-server", Version: "0.0.1"}, nil)
 	yrsClient := yrs.NewClient()
 
-	err := RegisterAllTools(mcpServer, yrsClient)
-	assert.NoError(t, err)
+	assert.NotPanics(t, func() {
+		RegisterTools(mcpServer, yrsClient)
+	})
 }
 
 func TestFormatSearchResult_Empty(t *testing.T) {

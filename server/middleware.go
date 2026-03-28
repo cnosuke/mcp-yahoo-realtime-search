@@ -32,32 +32,18 @@ func withAuthMiddleware(next http.Handler, authToken string) http.Handler {
 
 func withOriginValidation(next http.Handler, allowedOrigins []string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if len(allowedOrigins) == 0 {
-			next.ServeHTTP(w, r)
-			return
-		}
-
 		origin := r.Header.Get("Origin")
-		if origin == "" {
-			next.ServeHTTP(w, r)
+		if len(allowedOrigins) > 0 && origin != "" && !slices.Contains(allowedOrigins, origin) {
+			http.Error(w, "Forbidden", http.StatusForbidden)
 			return
 		}
-
-		if slices.Contains(allowedOrigins, origin) {
-			next.ServeHTTP(w, r)
-			return
-		}
-
-		http.Error(w, "Forbidden", http.StatusForbidden)
+		next.ServeHTTP(w, r)
 	})
 }
 
 func extractBearerToken(r *http.Request) string {
-	auth := r.Header.Get("Authorization")
-	if !strings.HasPrefix(auth, "Bearer ") {
-		return ""
-	}
-	return strings.TrimPrefix(auth, "Bearer ")
+	token, _ := strings.CutPrefix(r.Header.Get("Authorization"), "Bearer ")
+	return token
 }
 
 func withRequestLogging(next http.Handler) http.Handler {

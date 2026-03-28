@@ -23,6 +23,13 @@ var (
 )
 
 func main() {
+	configFlag := &cli.StringFlag{
+		Name:    "config",
+		Aliases: []string{"c"},
+		Value:   "config.yml",
+		Usage:   "path to the configuration file",
+	}
+
 	app := &cli.Command{
 		Name:    Name,
 		Usage:   Usage,
@@ -32,27 +39,13 @@ func main() {
 				Name:    "stdioserver",
 				Aliases: []string{"stdio", "s"},
 				Usage:   "Run MCP server with STDIO transport",
-				Flags: []cli.Flag{
-					&cli.StringFlag{
-						Name:    "config",
-						Aliases: []string{"c"},
-						Value:   "config.yml",
-						Usage:   "path to the configuration file",
-					},
-				},
+				Flags:   []cli.Flag{configFlag},
 				Action: func(ctx context.Context, cmd *cli.Command) error {
-					configPath := cmd.String("config")
-
-					cfg, err := config.LoadConfig(configPath)
+					cfg, err := initApp(cmd.String("config"), true)
 					if err != nil {
-						return ierrors.Wrap(err, "failed to load configuration file")
-					}
-
-					if err := logger.InitLogger(cfg.LogLevel, cfg.Log, true); err != nil {
-						return ierrors.Wrap(err, "failed to initialize logger")
+						return err
 					}
 					defer logger.Sync()
-
 					return server.RunStdio(cfg, Name, Version, Revision)
 				},
 			},
@@ -60,27 +53,13 @@ func main() {
 				Name:    "httpserver",
 				Aliases: []string{"http"},
 				Usage:   "Run MCP server with Streamable HTTP transport",
-				Flags: []cli.Flag{
-					&cli.StringFlag{
-						Name:    "config",
-						Aliases: []string{"c"},
-						Value:   "config.yml",
-						Usage:   "path to the configuration file",
-					},
-				},
+				Flags:   []cli.Flag{configFlag},
 				Action: func(ctx context.Context, cmd *cli.Command) error {
-					configPath := cmd.String("config")
-
-					cfg, err := config.LoadConfig(configPath)
+					cfg, err := initApp(cmd.String("config"), false)
 					if err != nil {
-						return ierrors.Wrap(err, "failed to load configuration file")
-					}
-
-					if err := logger.InitLogger(cfg.LogLevel, cfg.Log, false); err != nil {
-						return ierrors.Wrap(err, "failed to initialize logger")
+						return err
 					}
 					defer logger.Sync()
-
 					return server.RunHTTP(cfg, Name, Version, Revision)
 				},
 			},
@@ -90,4 +69,15 @@ func main() {
 	if err := app.Run(context.Background(), os.Args); err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 	}
+}
+
+func initApp(configPath string, suppressConsole bool) (*config.Config, error) {
+	cfg, err := config.LoadConfig(configPath)
+	if err != nil {
+		return nil, ierrors.Wrap(err, "failed to load configuration file")
+	}
+	if err := logger.InitLogger(cfg.LogLevel, cfg.Log, suppressConsole); err != nil {
+		return nil, ierrors.Wrap(err, "failed to initialize logger")
+	}
+	return cfg, nil
 }

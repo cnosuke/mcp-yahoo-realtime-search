@@ -19,10 +19,7 @@ import (
 func RunHTTP(cfg *config.Config, name string, version string, revision string) error {
 	zap.S().Infow("starting MCP Yahoo Realtime Search Server with Streamable HTTP transport")
 
-	mcpSrv, err := createMCPServer(cfg, name, version, revision)
-	if err != nil {
-		return err
-	}
+	mcpSrv := createMCPServer(cfg, name, version, revision)
 
 	httpHandler := mcp.NewStreamableHTTPHandler(
 		func(r *http.Request) *mcp.Server { return mcpSrv },

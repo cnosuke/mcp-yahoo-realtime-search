@@ -11,24 +11,13 @@ import (
 	"go.uber.org/zap"
 )
 
-// SearchArgs - Arguments for the search tool
 type SearchArgs struct {
 	Query string `json:"query" jsonschema:"Search keyword or phrase"`
 	Limit int    `json:"limit,omitempty" jsonschema:"Maximum number of tweets to return (0 = all, default 0)"`
 }
 
-// RegisterAllTools - Register all tools with the server
-func RegisterAllTools(mcpServer *mcp.Server, yrsClient *yrs.Client) error {
-	if err := registerSearchTool(mcpServer, yrsClient); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func registerSearchTool(mcpServer *mcp.Server, yrsClient *yrs.Client) error {
-	zap.S().Debugw("registering search tool")
-
+// RegisterTools registers all tools with the server
+func RegisterTools(mcpServer *mcp.Server, yrsClient *yrs.Client) {
 	mcp.AddTool(mcpServer, &mcp.Tool{
 		Name:        "search",
 		Description: "Search tweets via Yahoo! Japan Realtime Search",
@@ -57,8 +46,6 @@ func registerSearchTool(mcpServer *mcp.Server, yrsClient *yrs.Client) error {
 			Content: []mcp.Content{&mcp.TextContent{Text: formatted}},
 		}, nil, nil
 	})
-
-	return nil
 }
 
 func formatSearchResult(result *yrs.SearchResult) string {
