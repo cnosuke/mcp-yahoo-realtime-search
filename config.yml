@@ -1,0 +1,12 @@
+log: 'mcp-yahoo-realtime-search.log'
+log_level: info
+
+http:
+  binding: localhost:8080
+  endpoint_path: /mcp
+  auth_token: ''
+  allowed_origins: []
+
+search:
+  user_agent: ''
+  request_timeout: 30

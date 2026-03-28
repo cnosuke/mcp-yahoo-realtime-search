@@ -1,0 +1,6 @@
+bin/
+dist/
+*.md
+!README.md
+*.log
+.mcp.json
