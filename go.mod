@@ -3,7 +3,7 @@ module github.com/cnosuke/mcp-yahoo-realtime-search
 go 1.25.0
 
 require (
-	github.com/cnosuke/go-yahoo-realtime-search v0.0.0-20260327081828-3507b8a5b265
+	github.com/cnosuke/go-yahoo-realtime-search v0.0.0-20260328042534-dce030a929ea
 	github.com/knadh/koanf/parsers/yaml v1.1.0
 	github.com/knadh/koanf/providers/confmap v1.0.0
 	github.com/knadh/koanf/providers/file v1.2.1

@@ -44,7 +44,8 @@ func createMCPServer(cfg *config.Config, name string, version string, revision s
 		Name:    name,
 		Version: versionString,
 	}, &mcp.ServerOptions{
-		Logger: slog.Default(),
+		Instructions: "This server provides real-time search for tweets on X (formerly Twitter), primarily Japanese-language content. It uses Yahoo! Japan Realtime Search as its data source. Use the search tool to find recent tweets by keyword.",
+		Logger:       slog.Default(),
 	})
 
 	RegisterTools(mcpServer, yrsClient)
