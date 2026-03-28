@@ -4,6 +4,8 @@ github.com/andybalholm/cascadia v1.3.3 h1:AG2YHrzJIm4BZ19iwJ/DAua6Btl3IwJX+VI4kk
 github.com/andybalholm/cascadia v1.3.3/go.mod h1:xNd9bqTn98Ln4DwST8/nG+H0yuB8Hmgu1YHNnWw0GeA=
 github.com/cnosuke/go-yahoo-realtime-search v0.0.0-20260327081828-3507b8a5b265 h1:vMy+goptDRQ84zh8t4lX8X7YJhC9WSirqiPCT5f/Ceo=
 github.com/cnosuke/go-yahoo-realtime-search v0.0.0-20260327081828-3507b8a5b265/go.mod h1:oZxB/juhIHXU8wyDdZk/ogNVF495zO7fKvzkbfs4k6A=
+github.com/cnosuke/go-yahoo-realtime-search v0.0.0-20260328042534-dce030a929ea h1:tZ9aoDVyZC4IyX3MG0vp9YjB1OmLQ8p1b7UVmqvdRoE=
+github.com/cnosuke/go-yahoo-realtime-search v0.0.0-20260328042534-dce030a929ea/go.mod h1:oZxB/juhIHXU8wyDdZk/ogNVF495zO7fKvzkbfs4k6A=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/fsnotify/fsnotify v1.9.0 h1:2Ml+OJNzbYCTzsxtv8vKSFD9PbJjmhYF14k/jKC7S9k=

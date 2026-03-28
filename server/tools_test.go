@@ -7,6 +7,7 @@ import (
 	yrs "github.com/cnosuke/go-yahoo-realtime-search"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zaptest"
 )
@@ -90,4 +91,45 @@ func TestSearchArgs(t *testing.T) {
 
 	argsDefault := SearchArgs{Query: "test"}
 	assert.Equal(t, 0, argsDefault.Limit)
+}
+
+func TestBuildQuery_KeywordOnly(t *testing.T) {
+	q := buildQuery(SearchArgs{Query: "golang"})
+	built, err := q.Build()
+	require.NoError(t, err)
+	assert.Equal(t, "golang", built)
+}
+
+func TestBuildQuery_WithAllFilters(t *testing.T) {
+	q := buildQuery(SearchArgs{
+		Query:    "golang",
+		Not:      []string{"tutorial"},
+		Or:       []string{"rust", "python"},
+		FromUser: "cnosuke",
+		ToUser:   "someone",
+		Hashtags: []string{"go"},
+		URL:      "github.com",
+	})
+	built, err := q.Build()
+	require.NoError(t, err)
+	assert.Contains(t, built, "golang")
+	assert.Contains(t, built, "-tutorial")
+	assert.Contains(t, built, "(rust python)")
+	assert.Contains(t, built, "ID:cnosuke")
+	assert.Contains(t, built, "@someone")
+	assert.Contains(t, built, "#go")
+	assert.Contains(t, built, "URL:github.com")
+}
+
+func TestBuildQuery_FilterOnly(t *testing.T) {
+	q := buildQuery(SearchArgs{FromUser: "cnosuke"})
+	built, err := q.Build()
+	require.NoError(t, err)
+	assert.Equal(t, "ID:cnosuke", built)
+}
+
+func TestBuildQuery_EmptyQuery(t *testing.T) {
+	q := buildQuery(SearchArgs{})
+	_, err := q.Build()
+	assert.Error(t, err)
 }
